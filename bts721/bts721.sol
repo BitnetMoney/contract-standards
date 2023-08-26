@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-// Contract implementation by Masayoshi Kobayashi
+// Contract standard implementation by Masayoshi Kobayashi
 
 pragma solidity ^0.8.18;
 

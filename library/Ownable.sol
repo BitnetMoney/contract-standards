@@ -14,9 +14,5 @@ contract Ownable {
     function owner() public view returns (address) {
         return _owner;
     }
-
-    function _beforeTokenTransfer(address /*from*/, address /*to*/, uint256 /*tokenId*/, uint256 /*amount*/) internal virtual {
-        // Empty function for potential override in derived contracts
-    }
 }
 
