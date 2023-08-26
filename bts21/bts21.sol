@@ -1,25 +1,35 @@
 // SPDX-License-Identifier: MIT
+// Contract standard implementation by Masayoshi Kobayashi
+
 pragma solidity ^0.8.18;
 
 // Import Ownable and ReentrancyGuard from the specified repositories
 import "https://raw.githubusercontent.com/BitnetMoney/contract-standards/main/library/Ownable.sol";
-import "https://github.com/BitnetMoney/contract-standards/library/ReentrancyGuard.sol";
+import "https://raw.githubusercontent.com/BitnetMoney/contract-standards/main/library/ReentrancyGuard.sol";
 
 contract BTS21 is Ownable, ReentrancyGuard {
+    // Token information
     string private _tokenName;
     string private _tokenSymbol;
     uint8 private _tokenDecimals;
     uint256 private _tokenTotalSupply;
+
+    // Account balances and allowances
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
-    mapping(address => bool) private _frozenAccounts; // Mapping for frozen accounts
 
-    uint256 public oraclePrice; // Oracle price variable
+    // Mapping to track frozen accounts
+    mapping(address => bool) private _frozenAccounts;
 
+    // Oracle price variable
+    uint256 public oraclePrice;
+
+    // Events
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
-    event FrozenAccount(address indexed account, bool isFrozen); // Event for frozen account state change
+    event FrozenAccount(address indexed account, bool isFrozen);
 
+    // Constructor to initialize token details
     constructor(string memory name, string memory symbol, uint8 decimals, uint256 initialSupply) {
         _tokenName = name;
         _tokenSymbol = symbol;
@@ -50,7 +60,7 @@ contract BTS21 is Ownable, ReentrancyGuard {
         return _balances[account];
     }
 
-    // Transfer function with reentrancy protection
+    // Transfer function with reentrancy protection and frozen account check
     function transfer(address recipient, uint256 amount) external nonReentrant returns (bool) {
         require(!_frozenAccounts[msg.sender], "BTS21: sender account is frozen");
         require(!_frozenAccounts[recipient], "BTS21: recipient account is frozen");
@@ -71,7 +81,7 @@ contract BTS21 is Ownable, ReentrancyGuard {
         return true;
     }
 
-    // Transfer from approved allowance with reentrancy protection
+    // Transfer from approved allowance with reentrancy protection and frozen account check
     function transferFrom(address sender, address recipient, uint256 amount) external nonReentrant returns (bool) {
         require(!_frozenAccounts[sender], "BTS21: sender account is frozen");
         require(!_frozenAccounts[recipient], "BTS21: recipient account is frozen");
@@ -105,24 +115,24 @@ contract BTS21 is Ownable, ReentrancyGuard {
         return true;
     }
 
-    // Function to freeze/unfreeze an account
+    // Function to freeze/unfreeze an account, accessible only by the owner
     function freezeAccount(address account, bool isFrozen) external onlyOwner {
         _frozenAccounts[account] = isFrozen;
         emit FrozenAccount(account, isFrozen);
     }
 
-    // Function to set the oracle price of the token
+    // Function to set the oracle price of the token, accessible only by the owner
     function setOraclePrice(uint256 price) external onlyOwner {
         oraclePrice = price;
     }
 
-    // Transfer ownership to another address
+    // Transfer ownership to another address, accessible only by the owner
     function transferOwnership(address newOwner) external onlyOwner {
         require(newOwner != address(0), "BTS21: new owner is the zero address");
         _transferOwnership(newOwner);
     }
 
-    // Renounce ownership
+    // Renounce ownership, accessible only by the owner
     function renounceOwnership() external onlyOwner {
         _renounceOwnership();
     }
