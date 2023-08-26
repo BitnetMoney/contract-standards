@@ -9,38 +9,33 @@ contract BTS21 {
     string private _tokenSymbol;
     uint8 private _tokenDecimals;
     uint256 private _tokenTotalSupply;
-
-    // Balances and allowances
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
-
-    // Account freezing and oracle control
     mapping(address => bool) private _frozenAccounts;
     mapping(address => bool) private _oracles;
-
-    // Oracle pricing
     uint256 public oraclePrice;
-
-    // Contract owner and reentrancy check
     address private _owner;
     bool private _notEntered;
-
-    // Freezing functionality flag
     bool private _freezeEnabled;
 
     // Events for tracking transfers, approvals, account freezing, oracle additions, and removals
     event Transfer(address indexed from, address indexed to, uint256 value);
-    event Approval(address indexed owner, address indexed spender, uint256 value);
+    event Approval(
+        address indexed owner,
+        address indexed spender,
+        uint256 value
+    );
     event FrozenAccount(address indexed account, bool isFrozen);
     event OracleAdded(address indexed oracle);
     event OracleRemoved(address indexed oracle);
 
-    // Modifiers
+    // Modifier to restrict access to contract owner
     modifier onlyOwner() {
         require(isOwner(), "BTS21: caller is not the owner");
         _;
     }
 
+    // Modifier to prevent reentrant calls
     modifier nonReentrant() {
         require(_notEntered, "BTS21: reentrant call");
         _notEntered = false;
@@ -48,25 +43,25 @@ contract BTS21 {
         _notEntered = true;
     }
 
-    // Constructor to initialize the token with initial supply and optional freeze flag
+    // Constructor to initialize the token with initial supply and default freeze state
     constructor(
         string memory name,
         string memory symbol,
         uint8 decimals,
         uint256 initialSupply,
-        bool freezeEnabled
+        bool enableFreezeOnDeployment
     ) {
         _tokenName = name;
         _tokenSymbol = symbol;
         _tokenDecimals = decimals;
-        _tokenTotalSupply = initialSupply * 10**uint256(decimals);
+        _tokenTotalSupply = initialSupply * 10 ** uint256(decimals);
         _balances[msg.sender] = _tokenTotalSupply;
         _owner = msg.sender;
         _notEntered = true;
-        _freezeEnabled = freezeEnabled;
+        _freezeEnabled = enableFreezeOnDeployment; // Enable or disable freeze functionality on deployment
     }
 
-    // Function to determine the contract owner
+    // Function to get the contract owner
     function owner() public view returns (address) {
         return _owner;
     }
@@ -76,7 +71,7 @@ contract BTS21 {
         return msg.sender == _owner;
     }
 
-    // Function to renounce ownership (making the owner address zero)
+    // Function to renounce ownership
     function renounceOwnership() public onlyOwner {
         _owner = address(0);
     }
@@ -87,15 +82,24 @@ contract BTS21 {
         _owner = newOwner;
     }
 
-    // Function to get the balance of a specific account
+    // Function to get the balance of an account
     function balanceOf(address account) external view returns (uint256) {
         return _balances[account];
     }
 
     // Function to transfer tokens to a recipient
-    function transfer(address recipient, uint256 amount) external nonReentrant returns (bool) {
-        require(!_frozenAccounts[msg.sender], "BTS21: sender account is frozen");
-        require(!_frozenAccounts[recipient], "BTS21: recipient account is frozen");
+    function transfer(
+        address recipient,
+        uint256 amount
+    ) external nonReentrant returns (bool) {
+        require(
+            !_frozenAccounts[msg.sender],
+            "BTS21: sender account is frozen"
+        );
+        require(
+            !_frozenAccounts[recipient],
+            "BTS21: recipient account is frozen"
+        );
         require(recipient != address(0), "BTS21: transfer to the zero address");
         require(_balances[msg.sender] >= amount, "BTS21: insufficient balance");
 
@@ -114,13 +118,23 @@ contract BTS21 {
     }
 
     // Function to transfer tokens on behalf of the owner
-    function transferFrom(address sender, address recipient, uint256 amount) external nonReentrant returns (bool) {
+    function transferFrom(
+        address sender,
+        address recipient,
+        uint256 amount
+    ) external nonReentrant returns (bool) {
         require(!_frozenAccounts[sender], "BTS21: sender account is frozen");
-        require(!_frozenAccounts[recipient], "BTS21: recipient account is frozen");
+        require(
+            !_frozenAccounts[recipient],
+            "BTS21: recipient account is frozen"
+        );
         require(sender != address(0), "BTS21: transfer from the zero address");
         require(recipient != address(0), "BTS21: transfer to the zero address");
         require(_balances[sender] >= amount, "BTS21: insufficient balance");
-        require(_allowances[sender][msg.sender] >= amount, "BTS21: allowance exceeded");
+        require(
+            _allowances[sender][msg.sender] >= amount,
+            "BTS21: allowance exceeded"
+        );
 
         _balances[sender] -= amount;
         _balances[recipient] += amount;
@@ -131,16 +145,25 @@ contract BTS21 {
     }
 
     // Function to increase allowance for a spender
-    function increaseAllowance(address spender, uint256 addedValue) external returns (bool) {
+    function increaseAllowance(
+        address spender,
+        uint256 addedValue
+    ) external returns (bool) {
         _allowances[msg.sender][spender] += addedValue;
         emit Approval(msg.sender, spender, _allowances[msg.sender][spender]);
         return true;
     }
 
     // Function to decrease allowance for a spender
-    function decreaseAllowance(address spender, uint256 subtractedValue) external returns (bool) {
+    function decreaseAllowance(
+        address spender,
+        uint256 subtractedValue
+    ) external returns (bool) {
         uint256 currentAllowance = _allowances[msg.sender][spender];
-        require(currentAllowance >= subtractedValue, "BTS21: decreased allowance below zero");
+        require(
+            currentAllowance >= subtractedValue,
+            "BTS21: decreased allowance below zero"
+        );
 
         _allowances[msg.sender][spender] = currentAllowance - subtractedValue;
         emit Approval(msg.sender, spender, _allowances[msg.sender][spender]);
@@ -149,8 +172,11 @@ contract BTS21 {
 
     // Function to freeze or unfreeze an account, only callable by the owner
     function freezeAccount(address account, bool isFrozen) external onlyOwner {
-        require(_freezeEnabled, "BTS21: freezing is disabled");
-        require(!_frozenAccounts[msg.sender] && !_frozenAccounts[account], "BTS21: cannot freeze accounts");
+        require(!_freezeEnabled, "BTS21: freezing cannot be enabled");
+        require(
+            !_frozenAccounts[msg.sender] && !_frozenAccounts[account],
+            "BTS21: cannot freeze accounts"
+        );
 
         _frozenAccounts[account] = isFrozen;
         emit FrozenAccount(account, isFrozen);
@@ -185,8 +211,8 @@ contract BTS21 {
         _;
     }
 
-    // Function to enable or disable freezing functionality, only callable by the owner
-    function enableFreezing(bool enabled) external onlyOwner {
-        _freezeEnabled = enabled;
+    // Function to disable freezing, only callable by the owner
+    function disableFreezing() external onlyOwner {
+        _freezeEnabled = false;
     }
 }
