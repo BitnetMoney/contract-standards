@@ -58,7 +58,7 @@ To use the Bitnet Token Standards or library assets in your smart contracts on t
 
 ## Example Implementations
 
-Explore the provided example contracts to understand how to implement and customize the Bitnet Token Standards in your projects on the Bitnet network. Each example contract includes detailed comments explaining the usage of functions and features.
+Explore the provided example contracts in our **[main Wiki](https://github.com/BitnetMoney/bitnet/wiki)** to understand how to implement and customize the Bitnet Token Standards in your projects on the Bitnet network. Each example contract includes detailed comments explaining the usage of functions and features.
 
 ## Contributing
 
