@@ -148,4 +148,8 @@ contract BTS21 {
         require(_oracles[msg.sender], "BTS21: caller is not an oracle");
         _;
     }
+
+    function _revokeRightToFreeze() external onlyOwner {
+        _owner = address(0);
+    }
 }
