@@ -42,15 +42,15 @@ To use the Bitnet Token Standards or library assets in your smart contracts on t
 
 1. In your contract file, use the following import statement to access the desired standard or library:
 
-   ```solidity
-   import "https://raw.githubusercontent.com/BitnetMoney/contract-standards/main/bts20/bts20.sol";
-   ```
+```solidity
+import "https://raw.githubusercontent.com/BitnetMoney/contract-standards/main/bts20/bts20.sol";
+```
 
-   or
+or
 
-   ```solidity
-   import "https://raw.githubusercontent.com/BitnetMoney/contract-standards/main/library/Ownable.sol";
-   ```
+```solidity
+import "https://raw.githubusercontent.com/BitnetMoney/contract-standards/main/library/Ownable.sol";
+```
 
 2. Inherit from the imported contract in your contract's inheritance list.
 
