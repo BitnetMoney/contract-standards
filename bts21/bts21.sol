@@ -8,28 +8,24 @@ import "https://raw.githubusercontent.com/BitnetMoney/contract-standards/main/li
 import "https://raw.githubusercontent.com/BitnetMoney/contract-standards/main/library/ReentrancyGuard.sol";
 
 contract BTS21 is Ownable, ReentrancyGuard {
-    // Token information
     string private _tokenName;
     string private _tokenSymbol;
     uint8 private _tokenDecimals;
     uint256 private _tokenTotalSupply;
 
-    // Account balances and allowances
     mapping(address => uint256) private _balances;
     mapping(address => mapping(address => uint256)) private _allowances;
+    mapping(address => bool) private _frozenAccounts; // Mapping for frozen accounts
+    mapping(address => bool) private _oracles; // Mapping for oracles
 
-    // Mapping to track frozen accounts
-    mapping(address => bool) private _frozenAccounts;
+    uint256 public oraclePrice; // Oracle price variable
 
-    // Oracle price variable
-    uint256 public oraclePrice;
-
-    // Events
     event Transfer(address indexed from, address indexed to, uint256 value);
     event Approval(address indexed owner, address indexed spender, uint256 value);
-    event FrozenAccount(address indexed account, bool isFrozen);
+    event FrozenAccount(address indexed account, bool isFrozen); // Event for frozen account state change
+    event OracleAdded(address indexed oracle); // Event for oracle addition
+    event OracleRemoved(address indexed oracle); // Event for oracle removal
 
-    // Constructor to initialize token details
     constructor(string memory name, string memory symbol, uint8 decimals, uint256 initialSupply) {
         _tokenName = name;
         _tokenSymbol = symbol;
@@ -60,7 +56,7 @@ contract BTS21 is Ownable, ReentrancyGuard {
         return _balances[account];
     }
 
-    // Transfer function with reentrancy protection and frozen account check
+    // Transfer function with reentrancy protection
     function transfer(address recipient, uint256 amount) external nonReentrant returns (bool) {
         require(!_frozenAccounts[msg.sender], "BTS21: sender account is frozen");
         require(!_frozenAccounts[recipient], "BTS21: recipient account is frozen");
@@ -81,7 +77,7 @@ contract BTS21 is Ownable, ReentrancyGuard {
         return true;
     }
 
-    // Transfer from approved allowance with reentrancy protection and frozen account check
+    // Transfer from approved allowance with reentrancy protection
     function transferFrom(address sender, address recipient, uint256 amount) external nonReentrant returns (bool) {
         require(!_frozenAccounts[sender], "BTS21: sender account is frozen");
         require(!_frozenAccounts[recipient], "BTS21: recipient account is frozen");
@@ -121,19 +117,32 @@ contract BTS21 is Ownable, ReentrancyGuard {
         emit FrozenAccount(account, isFrozen);
     }
 
-    // Function to set the oracle price of the token, accessible only by the owner
-    function setOraclePrice(uint256 price) external onlyOwner {
+    // Function to set the oracle price of the token, accessible only by oracles
+    function setOraclePrice(uint256 price) external onlyOracle {
         oraclePrice = price;
     }
 
-    // Transfer ownership to another address, accessible only by the owner
-    function transferOwnership(address newOwner) external onlyOwner {
-        require(newOwner != address(0), "BTS21: new owner is the zero address");
-        _transferOwnership(newOwner);
+    // Function to add an oracle, accessible only by the owner
+    function addOracle(address oracle) external onlyOwner {
+        require(oracle != address(0), "BTS21: oracle address cannot be zero");
+        _oracles[oracle] = true;
+        emit OracleAdded(oracle);
     }
 
-    // Renounce ownership, accessible only by the owner
-    function renounceOwnership() external onlyOwner {
-        _renounceOwnership();
+    // Function to remove an oracle, accessible only by the owner
+    function removeOracle(address oracle) external onlyOwner {
+        _oracles[oracle] = false;
+        emit OracleRemoved(oracle);
+    }
+
+    // Function to check if an address is an oracle
+    function isOracle(address account) external view returns (bool) {
+        return _oracles[account];
+    }
+
+    // Modifier to check if the caller is an oracle
+    modifier onlyOracle() {
+        require(_oracles[msg.sender], "BTS21: caller is not an oracle");
+        _;
     }
 }
