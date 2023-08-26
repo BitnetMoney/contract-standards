@@ -20,7 +20,7 @@ In the rapidly evolving blockchain space, standardized smart contract designs pl
 
 The Bitnet Contract Standards consist of token standards that build upon widely recognized standards, enhancing them with additional features and functionalities specific to the Bitnet network. The following token standards are currently available:
 
-- [BTS20](./bts20/bts20.sol): An extended version of the token standard with added functionalities, designed to enhance security and control, tailored for the Bitnet network.
+- [BTS20](./bts20/bts20.sol): An extended version of the ERC20 token standard with added functionalities, designed to enhance security and control, tailored for the Bitnet network.
 
 - [BTS21](./bts21/bts21.sol): An extended version of the BTS20 token standard with integrated security enhancements, control features, and usability improvements, designed for Bitnet.
 
