@@ -148,6 +148,11 @@ contract BTS21 {
         emit FreezingDisabled();  // Emitting event when freezing is disabled
     }
 
+    // Function to check if freezing is enabled or disabled
+    function isFreezingEnabled() public view returns (bool) {
+        return _freezeEnabled;
+    }
+
     // Oracle functions
     function setOraclePrice(uint256 newPrice) external {
         require(_oracles[msg.sender], "BTS21: caller is not an oracle");
