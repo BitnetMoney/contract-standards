@@ -142,6 +142,12 @@ contract BTS21 {
         emit FrozenAccount(account, isFrozen);
     }
 
+    // Function to disable freezing, only callable by the owner
+    function disableFreezing() external onlyOwner {
+        _freezeEnabled = false;
+        emit FreezingDisabled();  // Emitting event when freezing is disabled
+    }
+
     // Oracle functions
     function setOraclePrice(uint256 newPrice) external {
         require(_oracles[msg.sender], "BTS21: caller is not an oracle");
@@ -176,11 +182,5 @@ contract BTS21 {
 
     function totalSupply() public view returns (uint256) {
         return _tokenTotalSupply;
-    }
-
-    // Function to disable freezing, only callable by the owner
-    function disableFreezing() external onlyOwner {
-        _freezeEnabled = false;
-        emit FreezingDisabled();  // Emitting event when freezing is disabled
     }
 }
