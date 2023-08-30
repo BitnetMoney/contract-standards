@@ -71,7 +71,7 @@ contract Ownable {
 }
 
 /*
-BTS20 contract represents a basic ERC20 token with added ownership capabilities.
+BTS20 contracts represent basic ERC20 token implementations with added ownership capabilities.
 */
 contract BTS20 is Ownable {
     // Private state variables to store the token information.
