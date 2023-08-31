@@ -20,9 +20,9 @@ interface IBTS21 {
     function setOraclePrice(uint256 newPrice) external;
     function addOracle(address newOracle) external;
     function removeOracle(address oracle) external;
-    function getTokenName() external view returns (string memory);
-    function getTokenSymbol() external view returns (string memory);
-    function getTokenDecimals() external view returns (uint8);
+    function name() external view returns (string memory);
+    function symbol() external view returns (string memory);
+    function decimals() external view returns (uint8);
 }
 
 contract BTS21 is IBTS21 {
@@ -181,15 +181,15 @@ contract BTS21 is IBTS21 {
         emit OracleRemoved(oracle);
     }
 
-    function getTokenName() external view override returns (string memory) {
+    function name() external view override returns (string memory) {
         return _tokenName;
     }
 
-    function getTokenSymbol() external view override returns (string memory) {
+    function symbol() external view override returns (string memory) {
         return _tokenSymbol;
     }
 
-    function getTokenDecimals() external view override returns (uint8) {
+    function decimals() external view override returns (uint8) {
         return _tokenDecimals;
     }
 

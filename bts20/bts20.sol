@@ -104,28 +104,28 @@ contract BTS20 is Ownable {
     /*
     External view function to get the name of the token.
     */
-    function getTokenName() external view returns (string memory) {
+    function name() external view returns (string memory) {
         return _tokenName;
     }
 
     /*
     External view function to get the symbol of the token.
     */
-    function getTokenSymbol() external view returns (string memory) {
+    function symbol() external view returns (string memory) {
         return _tokenSymbol;
     }
 
     /*
     External view function to get the decimals of the token.
     */
-    function getTokenDecimals() external view returns (uint8) {
+    function decimals() external view returns (uint8) {
         return _tokenDecimals;
     }
 
     /*
     External view function to get the total supply of the token.
     */
-    function getTokenTotalSupply() external view returns (uint256) {
+    function totalSupply() external view returns (uint256) {
         return _tokenTotalSupply;
     }
 
