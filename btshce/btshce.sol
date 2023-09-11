@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT
 
-/* BTSHCE Token Standard v.0.1.821 */
+/* BTSHCE Token Standard v.0.1.818 */
 
 /* BTSHCE: Bitnet Token Standard for High Compliance Environments
 Contract Standard by Masayoshi Kobayashi
@@ -36,7 +36,7 @@ requirements of high compliance environments. It extends the capabilities of
 ERC20 and BTS20 to provide a comprehensive solution for secure and regulated
 token management. */
 
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.18;
 
 contract BTSHCE {
     /* SafeMath helps preventing over and underflows for arithmetic

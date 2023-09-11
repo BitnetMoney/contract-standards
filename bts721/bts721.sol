@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Contract standard implementation by Masayoshi Kobayashi
 
-/* @version BTS721 Token Standard v.0.2.821 */
+/* @version BTS721 Token Standard v.0.2.818 */
 
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.18;
 
 /**
  * @notice Interface for BTS721, defining the necessary methods and events

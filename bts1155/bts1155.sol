@@ -2,11 +2,11 @@
 // Contract standard implementation by Masayoshi Kobayashi
 
 /* 
-  @version BTS1155 Token Standard v.0.2.821
+  @version BTS1155 Token Standard v.0.2.818
   This is the BTS1155 Token Standard interface definition.
 */
 
-pragma solidity ^0.8.21;
+pragma solidity ^0.8.18;
 
 /* Interface for BTS1155 standard */
 interface IBTS1155 {
