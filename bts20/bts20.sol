@@ -1,6 +1,8 @@
 // SPDX-License-Identifier: MIT
 /* Contract standard implementation by Masayoshi Kobayashi */
 
+/* BTS20 Token Standard v.0.2.821 */
+
 pragma solidity ^0.8.21;
 
 /* Interface for BTS20, defining the necessary methods and events */

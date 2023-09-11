@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 // Contract standard implementation by Masayoshi Kobayashi
 
-pragma solidity ^0.8.18;
+/* @version BTS21 Token Standard v.0.2.821 */
+
+pragma solidity ^0.8.21;
 
 interface IBTS21 {
     function totalSupply() external view returns (uint256);
