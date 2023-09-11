@@ -28,6 +28,8 @@ The Bitnet Contract Standards consist of token standards that build upon widely 
 
 - [BTS721](./bts721/bts721.sol): A standard for non-fungible tokens (NFTs), providing the foundation for unique and indivisible digital assets on the Bitnet network.
 
+- [BTSHCE](./btshce/btshce.sol): A standard for high compliance environments, with advanced and complex management functions.
+
 ## Library Assets
 
 The `/library` folder contains essential library assets that can be imported and used in your smart contracts on the Bitnet network:
